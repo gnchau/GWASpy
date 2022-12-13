@@ -37,6 +37,8 @@ def pca_filter_mt(
 
     # This step is expensive (on local machine)
     print(f'\nLD pruning using correlation threshold of {ld_cor} and window size of {ld_window}')
+    mt_ld_prune = mt_ld_prune.annotate_rows(global_pos=mt_ld_prune.locus.global_position())
+    mt_ld_prune = mt_ld_prune.key_rows_by(global_pos)
     mt_ld_prune = hl.ld_prune(mt_filt.GT, r2=ld_cor, bp_window_size=ld_window)
     mt_ld_pruned = mt_filt.filter_rows(hl.is_defined(mt_ld_prune[mt_filt.row_key]))
     print("\nNumber of SNPs after filtering: {}".format(mt_ld_pruned.count_rows()))
