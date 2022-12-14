@@ -39,7 +39,7 @@ def pca_filter_mt(
     print(f'\nLD pruning using correlation threshold of {ld_cor} and window size of {ld_window}')
     mt_filt = mt_filt.annotate_rows(global_pos=mt_filt.locus.global_position())
     mt_filt = mt_filt.key_rows_by(mt_filt.global_pos, mt_filt.locus, mt_filt.alleles)
-    mt_filt = mt_filt.row_key.drop('global_pos')
+    mt_filt = mt_filt.drop('global_pos')
     mt_filt.describe()
     print(type(mt_filt))
     mt_ld_prune = hl.ld_prune(mt_filt.GT, r2=ld_cor, bp_window_size=ld_window)
