@@ -50,12 +50,15 @@ def relatedness_check(
         in_mt: hl.MatrixTable = None,
         method: str = 'pc_relate',
         outdir: str = None,
-        kin_estimate: float = 0.1):
+        kin_estimate: float = 0.1,
+        include_kinself: bool = False):
 
     if method == 'pc_relate':
         print("\nUsing PC-Relate for relatedness checks")
         # compute kinship statistic for every sample-pair
-        relatedness_ht = hl.pc_relate(in_mt.GT, 0.01, k=10, statistics='kin')
+        if include_kinself:
+            print("\nkinself will be included in exported tsv file")
+        relatedness_ht = hl.pc_relate(in_mt.GT, 0.01, k=10, statistics='kin', include_self_kinship=include_kinself)
         
         print('exporting relatedness statistics to a tsv file')
         ht_export = relatedness_ht.key_by()
@@ -64,6 +67,13 @@ def relatedness_check(
 
         print('getting related samples to be removed using maximal independent set')
         # only run maximal independent set step on sample-pairs with kinship above specified threshold
+
+        # when include_kinself is True, not removing kinself will result in all samples failing relatedness because for
+        # every kin between a sample with itself, the kin estimate will be ~0.5 in most cases (excluding inbreeding)
+        if include_kinself:
+            relatedness_ht = relatedness_ht.filter(relatedness_ht.i == relatedness_ht.j, keep=False)
+        else:
+            relatedness_ht = relatedness_ht
         pairs = relatedness_ht.filter(relatedness_ht['kin'] > kin_estimate)
         samples_to_remove = hl.maximal_independent_set(pairs.i, pairs.j, False)
         samples = samples_to_remove.node.s.collect()

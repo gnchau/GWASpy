@@ -12,7 +12,7 @@ def pca(
         data_dirname: str = None, data_basename: str = None, input_type: str = None,
         maf: float = 0.05, hwe: float = 1e-3, call_rate: float = 0.98,
         ld_cor: float = 0.2, ld_window: int = 250000, n_pcs: int = 20, run_relatedness_check: bool = True,
-        relatedness_method: str = 'pc_relate',
+        include_kinself: bool = False, relatedness_method: str = 'pc_relate',
         relatedness_thresh: float = 0.1, prob_threshold: float = 0.8, out_dir: str = None):
 
     if not out_dir:
@@ -26,7 +26,7 @@ def pca(
                         data_dirname=data_dirname, data_basename=data_basename, out_dir=out_dir, input_type=input_type,
                         reference=reference, npcs=n_pcs, maf=maf, hwe=hwe, call_rate=call_rate,
                         relatedness_method=relatedness_method, run_relatedness_check=run_relatedness_check,
-                        ld_cor=ld_cor, ld_window=ld_window,
+                        ld_cor=ld_cor, ld_window=ld_window, include_kinself=include_kinself,
                         prob_threshold=prob_threshold)
 
     elif pca_type == 'joint':
@@ -43,7 +43,8 @@ def pca(
         from gwaspy.pca.pca_normal import run_pca_normal
         run_pca_normal(dirname=data_dirname, basename=data_basename, input_type=input_type, out_dir=out_dir,
                        reference=reference, maf=maf, hwe=hwe, call_rate=call_rate, ld_cor=ld_cor, ld_window=ld_window,
-                       n_pcs=n_pcs, relatedness_method=relatedness_method, relatedness_thresh=relatedness_thresh)
+                       n_pcs=n_pcs, run_relatedness_check=run_relatedness_check, relatedness_method=relatedness_method,
+                       relatedness_thresh=relatedness_thresh, include_kinself=include_kinself)
 
 
 def main():
@@ -70,6 +71,7 @@ def main():
                         help='Window size in base pairs (inclusive upper bound)')
     parser.add_argument('--npcs', type=int, default=20, help='Number of PCs to use')
     parser.add_argument('--no-relatedness', action='store_false')
+    parser.add_argument('--include-kinself', action='store_true')
     parser.add_argument('--relatedness-method', type=str, default='pc_relate',
                         choices=['pc_relate', 'ibd', 'king'], help='Method to use for the inference of relatedness')
     parser.add_argument('--relatedness-thresh', type=float, default=0.1,
@@ -89,8 +91,8 @@ def main():
         pca_type=args.pca_type, input_type=args.input_type, data_dirname=args.data_dirname,
         data_basename=args.data_basename, maf=args.maf, hwe=args.hwe, call_rate=args.geno, ld_cor=args.ld_cor,
         ld_window=args.ld_window, n_pcs=args.npcs, run_relatedness_check=args.no_relatedness,
-        relatedness_method=args.relatedness_method, relatedness_thresh=args.relatedness_thresh,
-        prob_threshold=args.prob, out_dir=args.out_dir)
+        include_kinself=args.include_kinself, relatedness_method=args.relatedness_method,
+        relatedness_thresh=args.relatedness_thresh, prob_threshold=args.prob, out_dir=args.out_dir)
 
     print('\nDone running PCA')
 
