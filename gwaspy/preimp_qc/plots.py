@@ -30,21 +30,24 @@ def plt_hist(expression: hl.Expression, bins: int = 50, range: list = None, thre
 
 
 def fstat_plot(df_female, df_male, f_stat_x: float = 0.4, f_stat_y: float = 0.8, figsize: tuple = (12, 8)):
-    fig, axs = plt.subplots(2, figsize=figsize)
-    axs[0].hist(df_female['filters'], bins=30, histtype='bar', alpha=0.8, fill=True, color='tab:blue', edgecolor="k")
-    axs[0].axvline(x=f_stat_y, color='red', linestyle='--')
-    axs[0].set_title('Female Fstat', fontsize=20)
-    axs[0].set_xlabel(xlabel='Fstat', fontsize=15)
-    axs[0].set_ylabel(ylabel='Frequency', fontsize=15)
-    axs[0].tick_params(axis='both', which='major', labelsize=12)
-    axs[1].hist(df_male['filters'], bins=40, histtype='bar', alpha=0.8, fill=True, color='tab:blue', edgecolor="k")
-    axs[1].axvline(x=f_stat_x, color='red', linestyle='--')
-    axs[1].set_title('Male Fstat', fontsize=20)
-    axs[1].set_xlabel(xlabel='Fstat', fontsize=15)
-    axs[1].set_ylabel(ylabel='Frequency', fontsize=15)
-    axs[1].tick_params(axis='both', which='major', labelsize=12)
-    fig.tight_layout(rect=[0, 0.03, 1, 0.95])
-    plt.close()
+    try:
+      fig, axs = plt.subplots(2, figsize=figsize)
+      axs[0].hist(df_female['filters'], bins=30, histtype='bar', alpha=0.8, fill=True, color='tab:blue', edgecolor="k")
+      axs[0].axvline(x=f_stat_y, color='red', linestyle='--')
+      axs[0].set_title('Female Fstat', fontsize=20)
+      axs[0].set_xlabel(xlabel='Fstat', fontsize=15)
+      axs[0].set_ylabel(ylabel='Frequency', fontsize=15)
+      axs[0].tick_params(axis='both', which='major', labelsize=12)
+      axs[1].hist(df_male['filters'], bins=40, histtype='bar', alpha=0.8, fill=True, color='tab:blue', edgecolor="k")
+      axs[1].axvline(x=f_stat_x, color='red', linestyle='--')
+      axs[1].set_title('Male Fstat', fontsize=20)
+      axs[1].set_xlabel(xlabel='Fstat', fontsize=15)
+      axs[1].set_ylabel(ylabel='Frequency', fontsize=15)
+      axs[1].tick_params(axis='both', which='major', labelsize=12)
+      fig.tight_layout(rect=[0, 0.03, 1, 0.95])
+      plt.close()
+    except:
+      fig, axs = plt.subplots(2, figsize=figsize)
 
     return fig
 
