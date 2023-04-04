@@ -30,6 +30,7 @@ def plt_hist(expression: hl.Expression, bins: int = 50, range: list = None, thre
 
 
 def fstat_plot(df_female, df_male, f_stat_x: float = 0.4, f_stat_y: float = 0.8, figsize: tuple = (12, 8)):
+  try:
     fig, axs = plt.subplots(2, figsize=figsize)
     axs[0].hist(df_female['filters'], bins=30, histtype='bar', alpha=0.8, fill=True, color='tab:blue', edgecolor="k")
     axs[0].axvline(x=f_stat_y, color='red', linestyle='--')
@@ -45,9 +46,10 @@ def fstat_plot(df_female, df_male, f_stat_x: float = 0.4, f_stat_y: float = 0.8,
     axs[1].tick_params(axis='both', which='major', labelsize=12)
     fig.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.close()
+  except:
     fig, axs = plt.subplots(2, figsize=figsize)
 
-    return fig
+  return fig
 
 
 def qqplot(pvals, title: str = None, figsize: tuple = (10, 10)):
